@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nutricionmoderna.com/sitemap.xml
+Sitemap: https://nuvacore.mx/sitemap.xml
