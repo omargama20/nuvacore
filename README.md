@@ -69,3 +69,7 @@ Sustituye fotografías de transformación y testimonios de presentación por mat
 ## Licencia
 
 El código se distribuye bajo licencia MIT. El nombre, logotipo y materiales de marca de Nuvacore no se conceden como marca comercial por esta licencia.
+
+
+## Nota importante para GitHub Pages
+Sube TODO el contenido del sitio, incluyendo la carpeta `assets/`. Si subes solo `index.html`, los logos y las imágenes no se verán.
