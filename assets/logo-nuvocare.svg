@@ -1,0 +1,22 @@
+<svg width="430" height="110" viewBox="0 0 430 110" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">NuvoCare</title>
+  <desc id="desc">NuvoCare Nutrición Moderna</desc>
+  <defs>
+    <linearGradient id="g1" x1="4" y1="80" x2="92" y2="20" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#246BEE"/>
+      <stop offset="0.52" stop-color="#52B7E8"/>
+      <stop offset="1" stop-color="#50D9B4"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="16" y1="18" x2="89" y2="91" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#59E0C4"/>
+      <stop offset="1" stop-color="#2C7DF0"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(2 7)">
+    <path d="M10 21C10 15 16 11 21 14L52 32V55L22 38V75L10 82V21Z" fill="url(#g1)"/>
+    <path d="M22 14L52 31L81 14C87 11 94 16 94 22V82L81 75V38L52 55V32L22 14Z" fill="url(#g2)"/>
+    <path d="M22 75L52 58L81 75V91L52 74L22 91V75Z" fill="#2D72EA" opacity="0.95"/>
+  </g>
+  <text x="115" y="57" fill="#0A1022" font-family="Inter, Arial, sans-serif" font-size="50" font-weight="800" letter-spacing="-2">nuvocare</text>
+  <text x="118" y="83" fill="#27344D" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="5.3">NUTRICIÓN MODERNA</text>
+</svg>
