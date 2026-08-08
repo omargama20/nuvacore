@@ -2,8 +2,10 @@
 const WHATSAPP_NUMBER = "5219995929228";
 const IS_PLACEHOLDER_NUMBER = WHATSAPP_NUMBER === "5210000000000";
 
-const buildWhatsappUrl = (message) =>
-  `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+const buildWhatsappUrl = (message) => {
+  const encoded = encodeURIComponent(message);
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+};
 
 const openWhatsapp = (message, statusElement = null) => {
   if (IS_PLACEHOLDER_NUMBER) {
@@ -27,7 +29,7 @@ const openWhatsapp = (message, statusElement = null) => {
 
 
 // ======================================================
-// LINKS DE WHATSAPP
+// LINKS WHATSAPP
 // ======================================================
 
 document.querySelectorAll(".whatsapp-link").forEach((link) => {
@@ -40,11 +42,18 @@ document.querySelectorAll(".whatsapp-link").forEach((link) => {
     link.target = "_blank";
     link.rel = "noopener noreferrer";
   }
+
+  link.addEventListener("click", (event) => {
+    if (IS_PLACEHOLDER_NUMBER) {
+      event.preventDefault();
+      openWhatsapp(message);
+    }
+  });
 });
 
 
 // ======================================================
-// FORMULARIO DE VALORACIÓN
+// FORMULARIO
 // ======================================================
 
 const form = document.querySelector("#appointment-form");
@@ -83,7 +92,7 @@ if (form) {
 
 
 // ======================================================
-// MENÚ MÓVIL
+// MENÚ
 // ======================================================
 
 const menuButton = document.querySelector(".menu-toggle");
@@ -107,11 +116,13 @@ if (menuButton && menu) {
     );
   };
 
+
   menuButton.addEventListener("click", () => {
     setMenuState(
       !menu.classList.contains("open")
     );
   });
+
 
   menu.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
@@ -119,11 +130,13 @@ if (menuButton && menu) {
     });
   });
 
+
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       setMenuState(false);
     }
   });
+
 
   window.addEventListener("resize", () => {
     if (window.innerWidth > 1020) {
@@ -134,7 +147,7 @@ if (menuButton && menu) {
 
 
 // ======================================================
-// ANIMACIONES AL HACER SCROLL
+// ANIMACIONES
 // ======================================================
 
 const revealObserver = new IntersectionObserver(
@@ -151,9 +164,10 @@ const revealObserver = new IntersectionObserver(
 
   },
   {
-    threshold: 0.10
+    threshold: 0.12
   }
 );
+
 
 document
   .querySelectorAll(".reveal")
@@ -161,8 +175,6 @@ document
     revealObserver.observe(element);
   });
 
-
-// Año automático
 
 const year = document.querySelector("#year");
 
@@ -172,183 +184,10 @@ if (year) {
 
 
 // ======================================================
-// CARRUSELES HORIZONTALES EN MÓVIL
+// POPUP
 // ======================================================
 
-const initMobileSliders = () => {
-
-  document
-    .querySelectorAll(".mobile-swipe")
-    .forEach((slider) => {
-
-      // Evitar inicializar dos veces
-
-      if (slider.dataset.sliderReady === "1") {
-        return;
-      }
-
-      const cards = Array
-        .from(slider.children)
-        .filter((child) => child.nodeType === 1);
-
-      if (cards.length < 2) {
-        return;
-      }
-
-
-      // Contenedor de indicadores
-
-      const ui = document.createElement("div");
-
-      ui.className = "mobile-slider-ui";
-      ui.setAttribute("aria-hidden", "true");
-
-
-      // Puntitos
-
-      const dots = document.createElement("div");
-
-      dots.className = "mobile-slider-dots";
-
-
-      cards.forEach((_, index) => {
-
-        const dot = document.createElement("span");
-
-        dot.className =
-          `mobile-slider-dot${
-            index === 0
-              ? " is-active"
-              : ""
-          }`;
-
-        dots.appendChild(dot);
-
-      });
-
-
-      // Texto "Desliza"
-
-      const hint = document.createElement("span");
-
-      hint.className = "mobile-slider-hint";
-
-      hint.textContent =
-        slider.dataset.sliderLabel ||
-        "Desliza horizontalmente";
-
-
-      ui.append(dots, hint);
-
-      slider.insertAdjacentElement(
-        "afterend",
-        ui
-      );
-
-
-      // Actualizar indicador activo
-
-      const update = () => {
-
-        const firstCard =
-          cards[0].getBoundingClientRect();
-
-        const gap = 14;
-
-        const cardWidth =
-          firstCard.width + gap;
-
-        const active =
-          Math.max(
-            0,
-            Math.min(
-              cards.length - 1,
-              Math.round(
-                slider.scrollLeft / cardWidth
-              )
-            )
-          );
-
-
-        dots
-          .querySelectorAll(".mobile-slider-dot")
-          .forEach((dot, index) => {
-
-            dot.classList.toggle(
-              "is-active",
-              index === active
-            );
-
-          });
-
-      };
-
-
-      slider.addEventListener(
-        "scroll",
-        () => {
-          window.requestAnimationFrame(update);
-        },
-        {
-          passive: true
-        }
-      );
-
-
-      slider.dataset.sliderReady = "1";
-
-    });
-
-};
-
-initMobileSliders();
-
-
-// ======================================================
-// PREGUNTAS FRECUENTES
-// Todas empiezan cerradas.
-// Solo una puede estar abierta.
-// ======================================================
-
-const faqItems = Array.from(
-  document.querySelectorAll("#faq details")
-);
-
-faqItems.forEach((item) => {
-
-  // Siempre cerrada al cargar
-
-  item.open = false;
-
-
-  item.addEventListener("toggle", () => {
-
-    if (!item.open) {
-      return;
-    }
-
-
-    // Cerrar las demás
-
-    faqItems.forEach((other) => {
-
-      if (other !== item) {
-        other.open = false;
-      }
-
-    });
-
-  });
-
-});
-
-
-// ======================================================
-// POPUP DE SALIDA
-// ======================================================
-
-const popup =
-  document.querySelector("#exit-popup");
+const popup = document.querySelector("#exit-popup");
 
 const popupClosedKey =
   "nuvacore-exit-popup-closed";
@@ -356,34 +195,21 @@ const popupClosedKey =
 let popupShown = false;
 
 
-// ?popup=1 permite probarlo manualmente
-
-const params =
-  new URLSearchParams(
-    window.location.search
-  );
-
-const forcePopup =
-  params.get("popup") === "1";
-
-
-// Mostrar popup
-
 const showPopup = (force = false) => {
 
-  if (!popup || popupShown) {
+  if (!popup) {
     return;
   }
 
 
-  // Si ya lo cerró durante esta sesión,
-  // no lo volvemos a molestar.
-
   if (
     !force &&
-    sessionStorage.getItem(
-      popupClosedKey
-    ) === "1"
+    (
+      popupShown ||
+      sessionStorage.getItem(
+        popupClosedKey
+      ) === "1"
+    )
   ) {
     return;
   }
@@ -401,11 +227,8 @@ const showPopup = (force = false) => {
   document.body.classList.add(
     "popup-open"
   );
-
 };
 
-
-// Cerrar popup
 
 const closePopup = () => {
 
@@ -427,20 +250,14 @@ const closePopup = () => {
     "popup-open"
   );
 
-
-  // Recordar únicamente durante la sesión
-
   sessionStorage.setItem(
     popupClosedKey,
     "1"
   );
-
 };
 
 
 if (popup) {
-
-  // Botón X, overlay y "No gracias"
 
   popup
     .querySelectorAll(
@@ -455,8 +272,6 @@ if (popup) {
 
     });
 
-
-  // ESC
 
   document.addEventListener(
     "keydown",
@@ -475,10 +290,7 @@ if (popup) {
   );
 
 
-  // ==========================================
-  // DESKTOP:
-  // detectar intención de salir por arriba
-  // ==========================================
+  // Desktop: detectar intención de salida
 
   document.addEventListener(
     "mouseout",
@@ -494,7 +306,7 @@ if (popup) {
 
       if (
         !event.relatedTarget &&
-        event.clientY <= 10
+        event.clientY <= 8
       ) {
         showPopup();
       }
@@ -503,58 +315,57 @@ if (popup) {
   );
 
 
-  // ==========================================
-  // MÓVIL:
-  // mostrar al avanzar ~48% de la página
-  // ==========================================
+  // Móvil: mostrar aproximadamente a mitad de página
 
   let mobilePopupTriggered = false;
 
 
+  const mobileIntentTrigger = () => {
+
+    if (
+      window.innerWidth > 900 ||
+      mobilePopupTriggered ||
+      popupShown
+    ) {
+      return;
+    }
+
+
+    const pageHeight =
+      Math.max(
+        document.documentElement.scrollHeight,
+        1
+      );
+
+
+    const progress =
+      (
+        window.scrollY +
+        window.innerHeight
+      ) / pageHeight;
+
+
+    if (progress >= 0.48) {
+
+      mobilePopupTriggered = true;
+
+      showPopup();
+
+    }
+
+  };
+
+
   window.addEventListener(
     "scroll",
-    () => {
-
-      if (
-        window.innerWidth > 900 ||
-        mobilePopupTriggered ||
-        popupShown
-      ) {
-        return;
-      }
-
-
-      const pageHeight =
-        document.documentElement
-          .scrollHeight;
-
-
-      const progress =
-        (
-          window.scrollY +
-          window.innerHeight
-        ) / pageHeight;
-
-
-      if (progress > 0.48) {
-
-        mobilePopupTriggered = true;
-
-        showPopup();
-
-      }
-
-    },
+    mobileIntentTrigger,
     {
       passive: true
     }
   );
 
 
-  // ==========================================
-  // RESPALDO:
-  // aparece después de 12 segundos
-  // ==========================================
+  // Respaldo después de 12 segundos
 
   setTimeout(() => {
 
@@ -563,20 +374,295 @@ if (popup) {
   }, 12000);
 
 
-  // ==========================================
-  // PRUEBA MANUAL
-  //
+  // Prueba manual:
   // nuvacore.mx/?popup=1
-  // ==========================================
 
-  if (forcePopup) {
+  const params =
+    new URLSearchParams(
+      window.location.search
+    );
+
+
+  if (
+    params.get("popup") === "1"
+  ) {
 
     setTimeout(() => {
 
       showPopup(true);
 
-    }, 350);
+    }, 250);
 
   }
 
 }
+
+
+// ======================================================
+// CARRUSELES MÓVILES
+// SOLO:
+// - 5 PILARES
+// - CÓMO PODEMOS AYUDARTE
+// - TESTIMONIOS
+// ======================================================
+
+const mobileSliderTargets = [
+
+  {
+    selector: ".pillars-5",
+    label:
+      "Desliza para ver los cinco pilares"
+  },
+
+  {
+    selector:
+      "#ayuda .benefit-list",
+    label:
+      "Desliza para ver más"
+  },
+
+  {
+    selector:
+      "#testimonios .testimonial-grid",
+    label:
+      "Desliza para leer más testimonios"
+  }
+
+];
+
+
+const initMobileSlider = (
+  slider,
+  label
+) => {
+
+  if (
+    !slider ||
+    slider.dataset.mobileSliderReady === "1"
+  ) {
+    return;
+  }
+
+
+  const cards =
+    Array
+      .from(slider.children)
+      .filter(
+        (child) =>
+          child.nodeType === 1
+      );
+
+
+  if (cards.length < 2) {
+    return;
+  }
+
+
+  // UI inferior
+
+  const ui =
+    document.createElement("div");
+
+  ui.className =
+    "mobile-slider-ui";
+
+  ui.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+
+  // Puntitos
+
+  const dots =
+    document.createElement("div");
+
+  dots.className =
+    "mobile-slider-dots";
+
+
+  cards.forEach(
+    (_, index) => {
+
+      const dot =
+        document.createElement("span");
+
+
+      dot.className =
+        "mobile-slider-dot" +
+        (
+          index === 0
+            ? " is-active"
+            : ""
+        );
+
+
+      dots.appendChild(dot);
+
+    }
+  );
+
+
+  // Texto desliza
+
+  const hint =
+    document.createElement("span");
+
+  hint.className =
+    "mobile-slider-hint";
+
+  hint.textContent =
+    label;
+
+
+  ui.append(
+    dots,
+    hint
+  );
+
+
+  slider.insertAdjacentElement(
+    "afterend",
+    ui
+  );
+
+
+  // Actualizar punto activo
+
+  const updateDots = () => {
+
+    const first =
+      cards[0];
+
+
+    const firstRect =
+      first.getBoundingClientRect();
+
+
+    const styles =
+      getComputedStyle(slider);
+
+
+    const gap =
+      parseFloat(
+        styles.columnGap ||
+        styles.gap ||
+        "14"
+      ) || 14;
+
+
+    const step =
+      firstRect.width + gap;
+
+
+    const active =
+      Math.max(
+        0,
+        Math.min(
+          cards.length - 1,
+          Math.round(
+            slider.scrollLeft / step
+          )
+        )
+      );
+
+
+    dots
+      .querySelectorAll(
+        ".mobile-slider-dot"
+      )
+      .forEach(
+        (dot, index) => {
+
+          dot.classList.toggle(
+            "is-active",
+            index === active
+          );
+
+        }
+      );
+
+  };
+
+
+  slider.addEventListener(
+    "scroll",
+    () => {
+
+      requestAnimationFrame(
+        updateDots
+      );
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  slider.dataset.mobileSliderReady =
+    "1";
+};
+
+
+// Inicializar los tres
+
+mobileSliderTargets.forEach(
+  ({
+    selector,
+    label
+  }) => {
+
+    initMobileSlider(
+      document.querySelector(
+        selector
+      ),
+      label
+    );
+
+  }
+);
+
+
+// ======================================================
+// FAQ
+// TODAS CERRADAS AL CARGAR
+// SOLO UNA ABIERTA A LA VEZ
+// ======================================================
+
+const faqItems =
+  Array.from(
+    document.querySelectorAll(
+      "#faq details"
+    )
+  );
+
+
+faqItems.forEach((item) => {
+
+  item.open = false;
+
+
+  item.addEventListener(
+    "toggle",
+    () => {
+
+      if (!item.open) {
+        return;
+      }
+
+
+      faqItems.forEach(
+        (other) => {
+
+          if (other !== item) {
+            other.open = false;
+          }
+
+        }
+      );
+
+    }
+  );
+
+});
